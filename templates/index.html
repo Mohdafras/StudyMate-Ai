@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyMate AI &mdash; Your AI-Powered Study Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <span class="brand__mark">SM</span>
+      <div class="brand__text">
+        <span class="brand__name">StudyMate <em>AI</em></span>
+        <span class="brand__tagline">Your AI-powered study companion</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero" id="hero">
+    <p class="hero__eyebrow">Three tools. One desk.</p>
+    <h1 class="hero__title">Study smarter <span class="hl">with AI</span></h1>
+    <p class="hero__subtitle">Summarize notes, understand concepts, and improve your answers &mdash; all in one place.</p>
+
+    <div class="mode-grid" id="modeGrid">
+      <button class="mode-card" data-mode="summarize" data-title="Summarize Notes" data-icon="📝"
+              data-desc="Paste your lecture notes or reading material and get a clear summary, key points, and important terms.">
+        <span class="mode-card__index">01</span>
+        <span class="mode-card__icon">📝</span>
+        <span class="mode-card__title">Summarize Notes</span>
+        <span class="mode-card__desc">Turn long notes into a clean, structured summary.</span>
+      </button>
+
+      <button class="mode-card" data-mode="explain" data-title="Explain Concept" data-icon="💡"
+              data-desc="Enter any topic and get a simple definition, how it works, a real-world example, and a key takeaway.">
+        <span class="mode-card__index">02</span>
+        <span class="mode-card__icon">💡</span>
+        <span class="mode-card__title">Explain Concept</span>
+        <span class="mode-card__desc">Get a plain-language walkthrough of any topic.</span>
+      </button>
+
+      <button class="mode-card" data-mode="improve" data-title="Improve Answer" data-icon="✍️"
+              data-desc="Paste an answer you wrote and get an improved version, with feedback and suggestions.">
+        <span class="mode-card__index">03</span>
+        <span class="mode-card__icon">✍️</span>
+        <span class="mode-card__title">Improve Answer</span>
+        <span class="mode-card__desc">Sharpen a written answer before you submit it.</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="workspace" id="workspace" hidden>
+    <div class="workspace__card">
+      <button class="workspace__back" id="backBtn" type="button" aria-label="Back to modes">&larr; Back</button>
+
+      <div class="workspace__head">
+        <span class="workspace__icon" id="wsIcon">📝</span>
+        <div>
+          <h2 class="workspace__title" id="wsTitle">Summarize Notes</h2>
+          <p class="workspace__desc" id="wsDesc">Paste your notes below.</p>
+        </div>
+      </div>
+
+      <label class="field-label" for="contentInput">Your content</label>
+      <textarea id="contentInput" class="content-input" rows="10" maxlength="6000"
+                placeholder="Paste your notes, concept, or answer here..."></textarea>
+
+      <div class="field-meta">
+        <span id="inputError" class="field-error" role="alert"></span>
+        <span id="charCount" class="char-count">0 / 6000</span>
+      </div>
+
+      <div class="workspace__actions">
+        <button id="clearBtn" type="button" class="btn btn--ghost">Clear</button>
+        <button id="generateBtn" type="button" class="btn btn--primary">
+          <span id="generateLabel">Generate</span>
+          <span id="spinner" class="spinner" hidden></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="workspace__card result-card" id="resultCard" hidden>
+      <div class="result-card__head">
+        <h3>AI Response</h3>
+        <button id="copyBtn" type="button" class="btn btn--small">Copy Response</button>
+      </div>
+      <div id="resultContent" class="result-content"></div>
+    </div>
+
+    <div class="workspace__card error-card" id="errorCard" hidden>
+      <p id="errorText"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>StudyMate AI &mdash; built for students, powered by an LLM API.</p>
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
