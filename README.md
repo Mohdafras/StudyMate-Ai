@@ -1,242 +1,449 @@
-# StudyMate AI
+# 📚 StudyMate AI
 
-An AI-powered study companion for students. Paste your notes, a concept, or an
-exam answer, and get an AI-generated summary, explanation, or improved version
-back — right in the browser.
+### AI-Powered Study Companion with Quiz Generation & RAG
 
-## Overview
+<div align="center">
 
-StudyMate AI is a beginner-level, full-stack web application built with
-Flask (Python) on the backend and plain HTML/CSS/JavaScript on the frontend.
-It integrates with an Google Gemini-compatible LLM API to provide three focused
-study utilities.
+**Understand • Practice • Improve • Ask Questions**
 
-## Problem Statement
+![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-Backend-000000?style=for-the-badge&logo=flask&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/HTML5-Frontend-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-Styling-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-LLM-8E75B2?style=for-the-badge)
+![FAISS](https://img.shields.io/badge/FAISS-Vector%20Search-00A67E?style=for-the-badge)
+![PyMuPDF](https://img.shields.io/badge/PyMuPDF-PDF%20Processing-3776AB?style=for-the-badge)
 
-Students often struggle to:
-- Digest long lecture notes quickly before an exam
-- Understand technical concepts explained in a confusing way
-- Know whether a written answer is strong enough for an exam or interview
+</div>
 
-Doing all three usually means switching between several tools or asking
-a friend/tutor. StudyMate AI puts all three in one simple interface.
+---
 
-## Objective
+## 📌 Overview
 
-Build a simple, reliable, and explainable AI tool that solves a real student
-problem, using a beginner-friendly stack (Flask + vanilla JS), with proper
-prompt design, input validation, and error handling — without unnecessary
-complexity (no databases, no auth, no RAG/embeddings, no heavy frameworks).
+**StudyMate AI** is a full-stack, AI-powered study companion designed to help students **understand, summarize, improve, practice, and interact with their study material** from a single web application.
 
-## Features
+The application combines **Google Gemini, prompt engineering, quiz generation, embeddings, semantic search, and Retrieval-Augmented Generation (RAG)** to provide five focused study utilities.
 
-- **Summarize Notes** — condenses long notes into a summary, key points, and
-  important terms.
-- **Explain Concept** — explains any topic with a definition, how it works,
-  a real-world example, a simple example, and a key takeaway.
-- **Improve Answer** — rewrites a student's answer into a stronger version,
-  with feedback on what was weak and suggestions for improvement.
-- Character counter, clear/generate buttons, loading indicator, and a
-  "Copy Response" button.
-- Friendly validation and error messages (no raw stack traces).
+### StudyMate AI provides:
 
-## Technology Stack
+1. 📝 **Summarize Notes**
+2. 💡 **Explain Concept**
+3. ✍️ **Improve Answer**
+4. 🧠 **Generate Quiz**
+5. 📖 **Ask My Notes — RAG**
 
-**Backend:** Python, Flask
-**Frontend:** HTML5, CSS3, vanilla JavaScript (no frontend framework)
-**AI:** Google Gemini-compatible Chat Completions API (via the official `google-genai`
-Python SDK), configured through environment variables so the provider can
-be swapped later without touching the rest of the app.
+The project uses a beginner-friendly architecture built with **Flask and vanilla JavaScript**, without a traditional database, authentication system, or heavy AI framework.
 
-## System Architecture
+---
 
-```
-User
-  ↓
-Web Interface (HTML/CSS/JS)
-  ↓
-Flask Backend (app.py)
-  ↓
-Prompt Builder (services/ai_service.py)
-  ↓
-LLM API (Google Gemini-compatible)
-  ↓
-AI Response
-  ↓
-Web Interface
-```
+# 🎯 Problem Statement
 
-The frontend never talks to the LLM API directly. It only calls the Flask
-backend's own `/api/generate` endpoint. The backend is the only place that
-holds the API key and knows how to talk to the AI provider.
+Students often face several challenges while preparing for exams, assignments, and interviews:
 
-## How It Works
+- Long lecture notes are difficult to review quickly.
+- Technical concepts can be difficult to understand.
+- Students may not know how to improve their written answers.
+- Creating practice questions manually takes time.
+- Finding specific information inside large study documents can be difficult.
 
-1. The student opens the app and picks one of three modes (cards on the
-   home screen).
-2. The workspace shows a textarea for that mode, with a live character
-   counter.
-3. The student types or pastes content and clicks **Generate**.
-4. The frontend validates the input (not empty, not too short, not too
-   long) before sending anything to the server.
-5. The frontend sends a `POST` request to `/api/generate` with the
-   selected `mode` and `content`.
-6. Flask re-validates the request server-side (never trust the client
-   alone), then passes the mode + content to `services/ai_service.py`.
-7. `ai_service.py` picks the prompt template for that mode, fills in the
-   student's content, and calls the LLM API.
-8. The AI's response is returned to Flask, which sends it back to the
-   browser as JSON.
-9. The frontend renders the response with headings/bullets and shows a
-   "Copy Response" button.
+StudyMate AI combines these workflows into one simple platform.
 
-## Prompt Engineering Approach
+```text
+Understand → Summarize → Improve → Practice → Ask
 
-Every mode uses a two-part **system + user** message structure (the
-standard Chat Completions pattern):
+---
 
-- **System instruction** — sets the AI's role and general behavior for
-  that mode (e.g. *"You are a patient AI tutor helping college students
-  understand technical concepts."*). This stays constant per mode and is
-  never shown to or edited by the user.
-- **User content** — a template that combines:
-  - **Task-specific instructions** (what to produce, and in what order)
-  - **Output format** (explicit headings like `## Simple Definition`,
-    so the response is easy to parse and display)
-  - **The student's actual input**, inserted into the template
+# 🎯 Objectives
 
-All three prompt templates live in one place, `services/ai_service.py`, in
-a `PROMPTS` dictionary keyed by mode. This keeps prompt design isolated
-from request handling, so a prompt can be tuned without touching `app.py`
-or the frontend at all.
+The main objectives of StudyMate AI are to:
 
-## Input Validation
+- Build a practical AI-powered study application for students.
+- Provide multiple AI-assisted study utilities in one platform.
+- Use prompt engineering to generate structured and useful responses.
+- Generate interactive quizzes from study material.
+- Implement a Retrieval-Augmented Generation (RAG) system.
+- Ground AI answers in the user's uploaded study material.
+- Use embeddings and vector similarity search for document retrieval.
+- Keep API credentials secure on the backend.
+- Implement validation on both frontend and backend.
+- Handle AI, network, and file-processing errors gracefully.
+- Maintain a simple and modular architecture that is easy to understand and extend.
 
-Performed on **both** the frontend and backend (defense in depth):
+---
 
-- Empty input → `"Please enter some content first."`
-- Too short (under 10 characters) → `"Please provide a little more content."`
-- Too long (over 6000 characters) → a friendly length-limit message
-- Invalid/missing mode → rejected with a clear error
-- The **Generate** button is disabled while a request is in flight, to
-  prevent duplicate submissions.
+# 🚀 Features
 
-## Error Handling
+StudyMate AI provides **five AI-powered study modules**, each designed to solve a different problem faced by students during learning, exam preparation, and interview preparation.
 
-The backend distinguishes between failure types and always returns a
-friendly `error` message in JSON — never a raw exception or stack trace:
+---
 
-| Situation                     | Response                                          |
-|--------------------------------|----------------------------------------------------|
-| Missing/invalid API key        | "AI service authentication failed..."             |
-| Rate limit hit                 | "...receiving too many requests right now..."     |
-| Request timed out               | "...took too long to respond..."                  |
-| Network/connection failure      | "Could not connect to the AI service..."          |
-| Unexpected/empty AI response    | "...unexpected response from the AI service."     |
-| Any other server-side error     | "Something went wrong on our end..."              |
+## 📝 1. Summarize Notes
 
-The frontend shows these messages in a dedicated error card and never
-crashes the page.
+The **Summarize Notes** module helps students quickly understand lengthy study material.
 
-## Security
+Students can paste lecture notes, textbook content, or other study material, and StudyMate AI converts it into a shorter and easier-to-review format.
 
-The API key is **only** read from a `.env` file on the server via
-`python-dotenv` + `os.getenv`, and is only ever used inside
-`services/ai_service.py`. It is:
+### Key Features
 
-- Never hardcoded anywhere in the source code
-- Never sent to, or accessible from, the frontend JavaScript
-- Never logged or included in error messages returned to the client
-- Excluded from version control via `.gitignore`
+- Generates a concise summary of long notes
+- Highlights important points
+- Identifies important terms
+- Organizes information in an easy-to-read format
+- Helps students revise large topics quickly
 
-Environment variables keep secrets out of source code, so the same
-codebase can be shared, committed to GitHub, or deployed without ever
-exposing the real key. Only `.env.example` (a template with a placeholder)
-is committed.
+This module is especially useful during **exam revision**, when students need to review large amounts of content in a short period of time.
 
-## Installation
+---
 
-```bash
-# 1. Create and activate a virtual environment
-python -m venv venv
+## 💡 2. Explain Concept
 
-# Windows
-venv\Scripts\activate
+The **Explain Concept** module helps students understand difficult academic and technical concepts in simple language.
 
-# macOS/Linux
-source venv/bin/activate
+Students can enter any concept or topic they are struggling with, and the AI provides a structured explanation.
 
-# 2. Install dependencies
-pip install -r requirements.txt
+### Key Features
 
-# 3. Create your .env file
-cp .env.example .env      # macOS/Linux
-copy .env.example .env    # Windows
+- Provides a simple definition
+- Explains how the concept works
+- Gives real-world examples
+- Provides simple examples for better understanding
+- Highlights the main takeaway
 
-# 4. Edit .env and add your real API key
-```
+This module acts like an **AI tutor**, making complex concepts easier for students to understand.
 
-## Running the App
+---
 
-```bash
-python app.py
-```
+## ✍️ 3. Improve Answer
 
-Then open:
+The **Improve Answer** module helps students improve answers written for exams, assignments, or interviews.
 
-```
-http://127.0.0.1:5000
-```
+Students can paste their existing answer, and StudyMate AI analyzes it and generates a clearer and stronger version.
 
-## API Configuration
+### Key Features
 
-Open `.env` and set:
+- Improves the structure of the answer
+- Makes the explanation clearer
+- Identifies weak areas
+- Provides suggestions for improvement
+- Generates an improved version of the answer
 
-```
-GEMINI_API_KEY=your_real_api_key_here
-```
+This module helps students understand **how they can present their knowledge more effectively**.
 
-Optional — only needed if you want to point at a different
-Google Gemini-compatible provider or model:
+---
 
-```
-GEMINI_MODEL=https://api.google-genai.com/v1
-GEMINI_MODEL=gemini-2.5-flash
-```
+## 🧠 4. Generate Quiz
 
-Because the provider configuration lives entirely in `ai_service.py` and
-environment variables, switching providers later does not require
-changing `app.py`, the prompts, or the frontend.
+The **Generate Quiz** module allows students to convert their study material into an interactive multiple-choice quiz.
 
-## Project Structure
+Students paste their notes, select the number of questions and difficulty level, and StudyMate AI automatically generates a quiz.
 
-```
+### Key Features
+
+- Generates quizzes directly from study notes
+- Supports **5, 10, or 15 questions**
+- Supports **Easy, Medium, and Hard** difficulty levels
+- Provides four options for every question
+- Allows students to select answers interactively
+- Calculates the final score
+- Displays correct and incorrect answers
+- Provides explanations for answers
+
+This module allows students to move from **passive reading to active learning** by testing their understanding of a topic.
+
+---
+
+## 📖 5. Ask My Notes — RAG
+
+The **Ask My Notes** module allows students to upload their own study material and ask questions specifically based on that document.
+
+It uses **Retrieval-Augmented Generation (RAG)** to find relevant information from the uploaded notes before generating an answer.
+
+### Supported Documents
+
+- PDF
+- TXT
+
+### Key Features
+
+- Upload personal study material
+- Ask questions about the uploaded document
+- Retrieves relevant information from the notes
+- Generates answers based on the uploaded material
+- Displays the source filename
+- Displays page information when available
+- Reduces answers based purely on unrelated general AI knowledge
+
+### Simple RAG Flow
+
+```text
+Upload Study Material
+        ↓
+Process Document
+        ↓
+Find Relevant Information
+        ↓
+Send Relevant Context to Gemini
+        ↓
+Generate Answer
+        ↓
+Display Answer + Source
+
+---
+
+---
+
+# 📸 Screenshots
+
+## 🏠 Home Page
+
+The home page provides access to all five StudyMate AI modules from a single interface.
+
+![StudyMate AI Home](screenshots/home.png)
+
+---
+
+## 📝 Summarize Notes
+
+Students can enter their study material and generate a concise summary with important information.
+
+![Summarize Notes](screenshots/summarize.png)
+
+---
+
+## 💡 Explain Concept
+
+Students can enter a difficult concept and receive a simple explanation with examples.
+
+![Explain Concept](screenshots/explain.png)
+
+---
+
+## ✍️ Improve Answer
+
+Students can enter an existing answer and receive an improved and clearer version.
+
+![Improve Answer](screenshots/improve.png)
+
+---
+
+## 🧠 Generate Quiz
+
+Students can generate interactive MCQ quizzes by selecting the number of questions and difficulty level.
+
+![Generate Quiz](screenshots/quiz.png)
+
+---
+
+## 📖 Ask My Notes — RAG
+
+Students can upload PDF or TXT study material and ask questions based on the uploaded document.
+
+![Ask My Notes](screenshots/rag.png)
+
+---
+
+# 🛠️ Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| **Python 3.11** | Backend development and AI integration |
+| **Flask** | Web application backend and API handling |
+| **HTML5** | Structure of the web interface |
+| **CSS3** | Styling and responsive user interface |
+| **Vanilla JavaScript** | Frontend interactions and API communication |
+| **Google Gemini** | AI-powered summarization, explanations, answer improvement, quizzes, and RAG responses |
+| **Gemini Embeddings** | Converts document content into numerical representations for semantic search |
+| **FAISS** | Stores and searches document embeddings efficiently |
+| **PyMuPDF** | Extracts text and page information from PDF documents |
+| **python-dotenv** | Loads environment variables such as the Gemini API key |
+
+---
+
+# 🏗️ Project Architecture
+
+StudyMate AI follows a simple **frontend–backend architecture**.
+
+```text
+                    ┌──────────────────────┐
+                    │      User / Student  │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │   HTML / CSS / JS    │
+                    │      Frontend        │
+                    └──────────┬───────────┘
+                               │
+                         API Requests
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │       Flask          │
+                    │       Backend        │
+                    └──────────┬───────────┘
+                               │
+                 ┌─────────────┴─────────────┐
+                 │                           │
+                 ▼                           ▼
+        ┌─────────────────┐         ┌─────────────────┐
+        │  Gemini AI      │         │   RAG System    │
+        │                 │         │                 │
+        │ • Summarize     │         │ • PDF/TXT       │
+        │ • Explain       │         │ • Embeddings    │
+        │ • Improve       │         │ • FAISS Search  │
+        │ • Generate Quiz │         │ • Context       │
+        └─────────────────┘         └────────┬────────┘
+                                             │
+                                             ▼
+                                      ┌───────────────┐
+                                      │ Gemini AI     │
+                                      │ Grounded      │
+                                      │ Response      │
+                                      └───────────────┘
+
+---
+
+# 🔗 API Endpoints
+
+StudyMate AI uses Flask API endpoints to connect the frontend with the backend AI services.
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `POST` | `/api/generate` | Handles summarization, concept explanation, and answer improvement |
+| `POST` | `/api/quiz` | Generates AI-powered quizzes |
+| `POST` | `/api/rag/upload` | Uploads and processes study documents |
+| `POST` | `/api/rag/ask` | Answers questions using uploaded study material |
+
+---
+
+# 🤖 AI Integration
+
+StudyMate AI uses **Google Gemini** as the primary AI model.
+
+Gemini is used across multiple modules for:
+
+- Summarizing study material
+- Explaining concepts
+- Improving written answers
+- Generating quiz questions
+- Generating answers from retrieved document content
+
+The application uses different prompts depending on the selected module so that the AI response is focused on the student's specific requirement.
+
+---
+
+# 🧠 Retrieval-Augmented Generation (RAG)
+
+The **Ask My Notes** module uses Retrieval-Augmented Generation to make the AI response more relevant to the student's uploaded material.
+
+Instead of simply asking the AI a question, the system first looks for relevant information from the uploaded document and then uses that information to generate the response.
+
+### RAG Process
+
+```text
+Student Uploads PDF / TXT
+          ↓
+    Document Processing
+          ↓
+   Text is Extracted
+          ↓
+     Text is Chunked
+          ↓
+     Create Embeddings
+          ↓
+      FAISS Search
+          ↓
+ Retrieve Relevant Content
+          ↓
+     Gemini Generates
+          ↓
+     Grounded Answer
+
+# 📂 Project Structure
 studymate-ai/
 │
-├── app.py                 # Flask app, routes, request validation
-├── requirements.txt
-├── .env.example
-├── .gitignore
-├── README.md
+├── app.py
+│
+├── services/
+│   ├── ai_service.py
+│   ├── quiz_service.py
+│   └── rag_service.py
+│
+├── rag/
+│   ├── document_processor.py
+│   ├── embeddings.py
+│   └── vector_store.py
 │
 ├── templates/
-│   └── index.html          # Single-page UI
+│   └── index.html
 │
 ├── static/
-│   ├── style.css            # Visual design
-│   └── script.js            # Mode switching, validation, API calls
+│   ├── style.css
+│   └── script.js
 │
-└── services/
-    ├── __init__.py
-    └── ai_service.py        # Prompt templates + LLM API integration
-```
+├── screenshots/
+│   ├── home.png
+│   ├── summarize.png
+│   ├── explain.png
+│   ├── improve.png
+│   ├── quiz.png
+│   └── rag.png
+│
+├── .env.example
+├── .gitignore
+├── requirements.txt
+└── README.md
 
-## Future Improvements
 
-*(Not implemented — listed for context only)*
+# 🔑 Environment Variables
 
-- Quiz generation from notes
-- Study history / saved sessions
-- PDF upload support
-- Voice input
-- Personalized study plans based on past activity
+StudyMate AI requires a Google Gemini API key
+
+# ⚙️ Installation & Setup
+1. Clone the Repository
+git clone <your-github-repository-url>
+cd studymate-ai
+2. Create a Virtual Environment
+python -m venv venv
+3. Activate the Virtual Environment
+Windows
+venv\Scripts\activate
+macOS / Linux
+source venv/bin/activate
+4. Install Dependencies
+pip install -r requirements.txt
+5. Create the .env File
+
+Create a .env file in the project root and configure the required environment variables.
+
+GEMINI_API_KEY=your_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+GEMINI_EMBEDDING_MODEL=gemini-embedding-001
+MAX_UPLOAD_SIZE_MB=10
+
+6. Run the Application
+python app.py
+
+Open the application in your browser:
+
+http://127.0.0.1:5000
+
+# 🔮 Future Improvements
+
+Possible future enhancements include:
+
+👤 User authentication and personalized profiles
+💾 Persistent storage for uploaded documents
+📚 Multiple document support
+💬 Conversation history
+
+# 👨‍💻 Author
+
+Mohammed Shazin Afras
+
+StudyMate AI — AI-Powered Study Companion
+
+Built to explore the practical application of:
+
+Generative AI • RAG • Embeddings • Semantic Search • Full-Stack Development
