@@ -37,7 +37,7 @@ The project uses a beginner-friendly architecture built with **Flask and vanilla
 
 ---
 
-# 🎯 Problem Statement
+## 🎯 Problem Statement
 
 Students often face several challenges while preparing for exams, assignments, and interviews:
 
@@ -54,7 +54,7 @@ Understand → Summarize → Improve → Practice → Ask
 
 ---
 
-# 🎯 Objectives
+## 🎯 Objectives
 
 The main objectives of StudyMate AI are to:
 
@@ -72,7 +72,7 @@ The main objectives of StudyMate AI are to:
 
 ---
 
-# 🚀 Features
+## 🚀 Features
 
 StudyMate AI provides **five AI-powered study modules**, each designed to solve a different problem faced by students during learning, exam preparation, and interview preparation.
 
@@ -193,7 +193,7 @@ Display Answer + Source
 
 ---
 
-# 📸 Screenshots
+## 📸 Screenshots
 
 ## 🏠 Home Page
 
@@ -243,7 +243,7 @@ Students can upload PDF or TXT study material and ask questions based on the upl
 
 ---
 
-# 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
 | Technology | Purpose |
 |---|---|
@@ -260,7 +260,7 @@ Students can upload PDF or TXT study material and ask questions based on the upl
 
 ---
 
-# 🏗️ Project Architecture
+## 🏗️ Project Architecture
 
 StudyMate AI follows a simple **frontend–backend architecture**.
 
@@ -304,7 +304,7 @@ StudyMate AI follows a simple **frontend–backend architecture**.
 
 ---
 
-# 🔗 API Endpoints
+## 🔗 API Endpoints
 
 StudyMate AI uses Flask API endpoints to connect the frontend with the backend AI services.
 
@@ -317,7 +317,7 @@ StudyMate AI uses Flask API endpoints to connect the frontend with the backend A
 
 ---
 
-# 🤖 AI Integration
+## 🤖 AI Integration
 
 StudyMate AI uses **Google Gemini** as the primary AI model.
 
@@ -333,7 +333,7 @@ The application uses different prompts depending on the selected module so that 
 
 ---
 
-# 🧠 Retrieval-Augmented Generation (RAG)
+## 🧠 Retrieval-Augmented Generation (RAG)
 
 The **Ask My Notes** module uses Retrieval-Augmented Generation to make the AI response more relevant to the student's uploaded material.
 
@@ -360,7 +360,7 @@ Student Uploads PDF / TXT
           ↓
      Grounded Answer
 
-# 📂 Project Structure
+## 📂 Project Structure
 studymate-ai/
 │
 ├── app.py
@@ -396,7 +396,7 @@ studymate-ai/
 └── README.md
 
 
-# 🔑 Environment Variables
+## 🔑 Environment Variables
 
 StudyMate AI requires a Google Gemini API key
 
@@ -429,7 +429,7 @@ Open the application in your browser:
 
 http://127.0.0.1:5000
 
-# 🔮 Future Improvements
+## 🔮 Future Improvements
 
 Possible future enhancements include:
 
@@ -438,7 +438,7 @@ Possible future enhancements include:
 📚 Multiple document support
 💬 Conversation history
 
-# 👨‍💻 Author
+## 👨‍💻 Author
 
 Mohammed Shazin Afras
 
