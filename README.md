@@ -588,6 +588,13 @@ Possible future enhancements include:
 - 📚 Multiple document support
 - 💬 Conversation history
 - 📈 Student progress tracking
+- 📊 Quiz performance analytics
+- 🧠 Personalized quiz generation
+- 🃏 AI-generated flashcards
+- 🔊 Voice-based learning
+- 📱 Improved mobile experience
+- ☁️ Cloud deployment
+- 🔎 More advanced document retrieval
 
 ---
 

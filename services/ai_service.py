@@ -102,47 +102,45 @@ def _get_client():
         raise AIServiceError("Could not initialize the Gemini AI service.") from exc
 
 
+def get_gemini_client():
+    """Public shared client accessor for quiz and RAG services."""
+    return _get_client()
+
+
+def generate_with_gemini(user_prompt: str, system_instruction: str, max_output_tokens: int = 900,
+                         temperature: float = 0.4) -> str:
+    """Shared safe text-generation wrapper so services use one configuration path."""
+    client = _get_client()
+    try:
+        response = client.models.generate_content(
+            model=MODEL_NAME, contents=user_prompt,
+            config=types.GenerateContentConfig(system_instruction=system_instruction,
+                                               temperature=temperature,
+                                               max_output_tokens=max_output_tokens),
+        )
+    except Exception as exc:
+        logger.exception("Gemini API request failed: %s", type(exc).__name__)
+        message = str(exc).lower()
+        if "api key" in message or "authentication" in message or "unauthenticated" in message:
+            raise AIServiceError("Gemini authentication failed. Please check your API key.") from exc
+        if "quota" in message or "rate limit" in message or "resource exhausted" in message:
+            raise AIServiceError("Gemini API quota/rate limit reached. Please try again later.") from exc
+        if "timeout" in message:
+            raise AIServiceError("Gemini took too long to respond. Please try again.") from exc
+        if "connection" in message or "network" in message:
+            raise AIServiceError("Could not connect to Gemini. Please check your internet connection.") from exc
+        raise AIServiceError("The Gemini AI service returned an error. Please try again.") from exc
+    text = getattr(response, "text", None)
+    if not text or not text.strip():
+        raise AIServiceError("Gemini returned an empty response. Please try again.")
+    return text.strip()
+
+
 def generate_ai_response(mode: str, content: str) -> str:
     """Generate a response from Gemini using the selected structured prompt."""
     if mode not in PROMPTS:
         raise AIServiceError("Unknown study mode selected.")
 
-    client = _get_client()
     prompt = PROMPTS[mode]
     user_prompt = prompt["user"].format(content=content)
-
-    try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=user_prompt,
-            config=types.GenerateContentConfig(
-                system_instruction=prompt["system"],
-                temperature=0.5,
-                max_output_tokens=900,
-            ),
-        )
-    except Exception as exc:
-        # Log the exception type and message for local debugging, but never log the API key.
-        logger.exception("Gemini API request failed: %s", type(exc).__name__)
-        message = str(exc).lower()
-
-        if "api key" in message or "authentication" in message or "unauthenticated" in message:
-            raise AIServiceError("Gemini authentication failed. Please check your API key.") from exc
-        if "quota" in message or "rate limit" in message or "resource exhausted" in message:
-            raise AIServiceError("Gemini API quota/rate limit reached. Please try again later.") from exc
-        if "not found" in message or "model" in message and "invalid" in message:
-            raise AIServiceError(
-                f"The configured Gemini model '{MODEL_NAME}' is unavailable. Please check GEMINI_MODEL."
-            ) from exc
-        if "timeout" in message:
-            raise AIServiceError("Gemini took too long to respond. Please try again.") from exc
-        if "connection" in message or "network" in message:
-            raise AIServiceError("Could not connect to Gemini. Please check your internet connection.") from exc
-
-        raise AIServiceError("The Gemini AI service returned an error. Please try again.") from exc
-
-    text = getattr(response, "text", None)
-    if not text or not text.strip():
-        raise AIServiceError("Gemini returned an empty response. Please try again.")
-
-    return text.strip()
+    return generate_with_gemini(user_prompt, prompt["system"], 900, 0.5)
